@@ -1,0 +1,47 @@
+﻿@model TvChannelOperations.ViewModels.RegisterViewModel
+
+<style>
+    span {
+        font-size: large;
+        color: red;
+    }
+    ul {
+        padding-left: 0;
+        width: 40%;
+        align-content: center;
+    }
+    li {
+        padding-left: 0;
+        align-content: flex-start;
+        text-align: left;
+    }
+</style>
+
+<div align="center">
+    <h2>New user registration</h2>
+    <form method="post" asp-controller="Account" asp-action="Register">
+       
+        <div asp-validation-summary="ModelOnly">
+            <span>Please correct the following errors:</span>
+        </div>
+
+        <div>
+            <label asp-for="Email"></label><br />
+                <input asp-for="Email" />
+                <p><span asp-validation-for="Email"></span></p>
+        </div>
+        <div>
+            <label asp-for="Password"></label><br />
+                <input asp-for="Password" />
+                <p><span asp-validation-for="Password"></span></p>
+        </div>
+        <div>
+            <label asp-for="PasswordConfirm"></label><br />
+                <input asp-for="PasswordConfirm" />
+                <p><span asp-validation-for="PasswordConfirm"></span></p>
+        </div>
+        <div>
+            <input type="submit" value="Registration" />
+        </div>
+    </form>
+</div>
