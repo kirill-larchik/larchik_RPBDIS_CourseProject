@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApplication.Data;
-using WebApplication.Midelware;
+using WebApplication.Middleware;
 using WebApplication.Models;
 using WebApplication.Services;
 using WebApplication.ViewModels.Entities;
@@ -64,6 +64,7 @@ namespace WebApplication
             app.UseAuthorization();
 
             app.UseRoleInitializer();
+            app.UseDbInitializer();
 
             app.UseEndpoints(endpoints =>
             {

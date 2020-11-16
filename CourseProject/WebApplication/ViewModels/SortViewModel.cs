@@ -18,7 +18,7 @@ namespace WebApplication.ViewModels
         ShowNameDesc,
         ShowDescriptionAsc,
         ShowDescriptionDesc,
-        // Timetables
+        //Timetables
         TimetableDayOfWeekAsc,
         TimetableDayOfWeekDesc,
         TimetableMonthAsc,
@@ -28,7 +28,14 @@ namespace WebApplication.ViewModels
         TimetableStartTimeAsc,
         TimetableStartTimeDesc,
         TimetablEndTimeAsc,
-        TimetablEndTimeDesc
+        TimetablEndTimeDesc,
+        //Appeals
+        AppealFullNameAsc,
+        AppealFullNameDesc,
+        AppealOrganizationAsc,
+        AppealOrganizationDesc,
+        AppealGoalRequestAsc,
+        AppealGoalRequestDesc
     }
 
     public class SortViewModel
@@ -48,6 +55,10 @@ namespace WebApplication.ViewModels
         public SortState TimetableStartTimeSort { get; set; }
         public SortState TimetableEndTimeSort { get; set; }
 
+        //Appeals
+        public SortState AppealFullNameSort { get; set; }
+        public SortState AppealOrganizationSort { get; set; }
+        public SortState AppealGoalRequestSort { get; set; }
 
         public SortState CurrentState { get; set; }
         public SortViewModel(SortState state)
@@ -65,6 +76,11 @@ namespace WebApplication.ViewModels
             TimetableYearSort = state == SortState.TimetableYearAsc ? SortState.TimetableYearDesc : SortState.TimetableYearAsc;
             TimetableStartTimeSort = state == SortState.TimetableStartTimeAsc ? SortState.TimetableStartTimeDesc : SortState.TimetableStartTimeAsc;
             TimetableEndTimeSort = state == SortState.TimetablEndTimeAsc ? SortState.TimetablEndTimeDesc : SortState.TimetablEndTimeAsc;
+
+            //Appeals
+            AppealFullNameSort = state == SortState.AppealFullNameAsc ? SortState.AppealFullNameDesc : SortState.AppealFullNameAsc;
+            AppealOrganizationSort = state == SortState.AppealOrganizationAsc ? SortState.AppealOrganizationDesc : SortState.AppealOrganizationAsc;
+            AppealGoalRequestSort = state == SortState.AppealGoalRequestAsc ? SortState.AppealGoalRequestDesc : SortState.AppealGoalRequestAsc;
 
             CurrentState = state;
         }

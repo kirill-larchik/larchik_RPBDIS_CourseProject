@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using WebApplication.Data;
 using WebApplication.Models;
 
-namespace WebApplication.Midelware
+namespace WebApplication.Middleware
 {
     public class RoleInitializerMiddleware
     {
@@ -29,7 +29,8 @@ namespace WebApplication.Midelware
             await _next(context);
         }
     }
-    public static class DbInitializerExtensions
+
+    public static class RoleInitializerExtensions
     {
         public static IApplicationBuilder UseRoleInitializer(this IApplicationBuilder builder)
         {

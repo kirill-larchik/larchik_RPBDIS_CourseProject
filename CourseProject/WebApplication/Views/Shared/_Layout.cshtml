@@ -29,6 +29,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Timetables" asp-action="Index">Timetables</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Appeals" asp-action="Index">Appeals</a>
+                            </li>
                             @if (User.IsInRole("admin"))
                             {
                                 <li class="nav-item">
@@ -59,7 +62,7 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3 pt-3">
+        <main role="main" class="pb-5 pt-3">
             @RenderBody()
         </main>
     </div>

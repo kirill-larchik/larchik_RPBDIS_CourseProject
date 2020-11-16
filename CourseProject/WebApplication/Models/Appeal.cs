@@ -21,7 +21,7 @@ namespace WebApplication.Models
         public string Organization { get; set; }
 
         [Display(Name = "Show")]
-        public int ShodId { get; set; }
+        public int? ShowId { get; set; }
 
         [Required]
         [Display(Name = "Goal request")]
