@@ -35,7 +35,13 @@ namespace WebApplication.ViewModels
         AppealOrganizationAsc,
         AppealOrganizationDesc,
         AppealGoalRequestAsc,
-        AppealGoalRequestDesc
+        AppealGoalRequestDesc,
+        //Staff
+        StaffFullNameAsc,
+        StaffFullNameDesc,
+        //Positions
+        PositionsNameAsc,
+        PositionsNameDesc
     }
 
     public class SortViewModel
@@ -60,12 +66,19 @@ namespace WebApplication.ViewModels
         public SortState AppealOrganizationSort { get; set; }
         public SortState AppealGoalRequestSort { get; set; }
 
+        //Staff
+        public SortState StaffFullNameSort { get; set; }
+
+        //Positions
+        public SortState PositionNameSort { get; set; }
+
         public SortState CurrentState { get; set; }
         public SortViewModel(SortState state)
         {
             //Genres
             GenreNameSort = state == SortState.GenreNameAsc ? SortState.GenreNameDesc : SortState.GenreNameAsc;
             GenreDescriptionSort = state == SortState.GenreDescriptionAsc ? SortState.GenreDescriptionDesc : SortState.GenreDescriptionAsc;
+
             //Shows
             ShowNameSort = state == SortState.ShowNameAsc ? SortState.ShowNameDesc : SortState.ShowNameAsc;
             ShowDescriptionSort = state == SortState.ShowDescriptionAsc ? SortState.ShowDescriptionDesc : SortState.ShowDescriptionAsc;
@@ -81,6 +94,12 @@ namespace WebApplication.ViewModels
             AppealFullNameSort = state == SortState.AppealFullNameAsc ? SortState.AppealFullNameDesc : SortState.AppealFullNameAsc;
             AppealOrganizationSort = state == SortState.AppealOrganizationAsc ? SortState.AppealOrganizationDesc : SortState.AppealOrganizationAsc;
             AppealGoalRequestSort = state == SortState.AppealGoalRequestAsc ? SortState.AppealGoalRequestDesc : SortState.AppealGoalRequestAsc;
+
+            //Staff
+            StaffFullNameSort = state == SortState.StaffFullNameAsc ? SortState.StaffFullNameDesc : SortState.StaffFullNameAsc;
+
+            //Positions
+            PositionNameSort = state == SortState.PositionsNameAsc ? SortState.PositionsNameDesc : SortState.PositionsNameAsc;
 
             CurrentState = state;
         }

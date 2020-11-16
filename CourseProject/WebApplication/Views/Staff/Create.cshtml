@@ -1,0 +1,37 @@
+﻿@model WebApplication.ViewModels.Entities.StaffViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container text-center w-50">
+    <form method="post">
+        <h2>Create a new entity</h2>
+
+        <div>
+            <input hidden asp-for="PageViewModel.CurrentPage" value="@Model.PageViewModel.CurrentPage" />
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger text-center w-100 m-lg-0"></div>
+
+        <p>
+            <label asp-for="Entity.FullName"></label><br />
+            <input asp-for="Entity.FullName" class="w-75" />
+        <p><span asp-validation-for="Entity.FullName" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.PositionId"></label><br />
+            <input type="search" list="positions" asp-for="PositionName" class="w-75" />
+            <datalist id="positions">
+                @foreach (var item in Model.SelectList)
+                {
+                    <option value="@item.Name"></option>
+                }
+            </datalist>
+        <p><span asp-validation-for="Entity.PositionId" class="text-danger"></span></p>
+
+        <p>
+            <input type="submit" value="Add" class="btn btn-success w-75" />
+        <p><a asp-action="Index" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger w-75">Back</a></p>
+    </form>
+</div>
+
