@@ -20,7 +20,11 @@ namespace WebApplication.Midelware
 
         public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            await RoleInitializer.InitializeAsync(userManager, roleManager);
+            if (!(context.Session.Keys.Contains("roleStarting")))
+            {
+                await RoleInitializer.InitializeAsync(userManager, roleManager);
+                context.Session.SetString("roleStarting", "Yes");
+            }
 
             await _next(context);
         }
