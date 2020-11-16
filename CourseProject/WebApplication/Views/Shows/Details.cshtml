@@ -1,0 +1,54 @@
+﻿@model WebApplication.ViewModels.Entities.ShowsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container w-50">
+    <table class="table table-sm">
+        <thead class="thead-dark text-center">
+            <tr>
+                <th colspan="2">Detailed description of "@Model.Entity.Name"</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td><label asp-for="Entity.ReleaseDate"></label></td>
+                <td>@Model.Entity.ReleaseDate.ToString("d")</td>
+            </tr>
+
+            <tr>
+                <td><label asp-for="Entity.Duration"></label></td>
+                <td>@Model.Entity.Duration</td>
+            </tr>
+
+            <tr>
+                <td><label asp-for="Entity.Mark"></label></td>
+                <td>@Model.Entity.Mark</td>
+            </tr>
+
+            <tr>
+                <td><label asp-for="Entity.MarkMonth"></label></td>
+                <td>@Model.Entity.MarkMonth</td>
+            </tr>
+
+            <tr>
+                <td><label asp-for="Entity.MarkYear"></label></td>
+                <td>@Model.Entity.MarkYear</td>
+            </tr>
+
+            <tr>
+                <td><label asp-for="Entity.Genre"></label></td>
+                <td>@Model.Entity.Genre?.GenreName</td>
+            </tr>
+
+            <tr>
+                <td><label asp-for="Entity.Description"></label></td>
+                <td>@Model.Entity.Description</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>
+    <p><a asp-action="Index" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger w-100">Back</a></p>
+</div>

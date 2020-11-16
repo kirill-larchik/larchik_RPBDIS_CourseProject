@@ -1,0 +1,67 @@
+﻿@model WebApplication.ViewModels.Entities.ShowsViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container text-center w-50">
+    <form method="post">
+        <h2>Create a new entity</h2>
+
+        <div>
+            <input hidden asp-for="PageViewModel.CurrentPage" value="@Model.PageViewModel.CurrentPage" />
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger text-center w-100 m-lg-0"></div>
+
+        <p>
+            <label asp-for="Entity.Name"></label><br />
+            <input asp-for="Entity.Name" class="w-75" />
+        <p><span asp-validation-for="Entity.Name" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.ReleaseDate"></label><br />
+            <input asp-for="Entity.ReleaseDate" class="w-75" />
+        <p><span asp-validation-for="Entity.ReleaseDate" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.Duration"></label><br />
+            <input type="time" step="1" asp-for="Entity.Duration" class="w-75" />
+        <p><span asp-validation-for="Entity.Duration" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.Mark"></label><br />
+            <input asp-for="Entity.Mark" class="w-75" />
+        <p><span asp-validation-for="Entity.Mark" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.MarkMonth"></label><br />
+            <input asp-for="Entity.MarkMonth" class="w-75" />
+        <p><span asp-validation-for="Entity.MarkMonth" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.MarkYear"></label><br />
+            <input asp-for="Entity.MarkYear" class="w-75" />
+        <p><span asp-validation-for="Entity.MarkYear" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.GenreId"></label><br />
+            <input type="search" list="genres" asp-for="GenreName" class="w-75" />
+            <datalist id="genres">
+                @foreach (var item in Model.SelectList)
+                {
+                    <option value="@item.GenreName"></option>
+                }
+            </datalist>
+        <p><span asp-validation-for="Entity.GenreId" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.Description"></label><br />
+            <input asp-for="Entity.Description" class="w-75" />
+        <p><span asp-validation-for="Entity.Description" class="text-danger"></span></p>
+
+        <p>
+            <input type="submit" value="Add" class="btn btn-success w-75" />
+        <p><a asp-action="Index" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger w-75">Back</a></p>
+    </form>
+</div>
+

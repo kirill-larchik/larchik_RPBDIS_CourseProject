@@ -1,0 +1,52 @@
+﻿@model WebApplication.ViewModels.Entities.TimetablesViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container text-center w-50">
+    <form method="post">
+        <h2>Create a new entity</h2>
+
+        <div>
+            <input hidden asp-for="PageViewModel.CurrentPage" value="@Model.PageViewModel.CurrentPage" />
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger text-justify w-100 m-lg-0"></div>
+
+        <p>
+            <label asp-for="Entity.DayOfWeek"></label><br />
+            <input asp-for="Entity.DayOfWeek" class="w-75" />
+        <p><span asp-validation-for="Entity.DayOfWeek" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.Month"></label><br />
+            <input asp-for="Entity.Month" class="w-75" />
+        <p><span asp-validation-for="Entity.Month" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.Year"></label><br />
+            <input asp-for="Entity.Year" class="w-75" />
+        <p><span asp-validation-for="Entity.Year" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.ShowId"></label><br />
+            <input type="search" list="shows" asp-for="ShowName" class="w-75" />
+            <datalist id="shows">
+                @foreach (var item in Model.SelectList)
+                {
+                    <option value="@item.Name"></option>
+                }
+            </datalist>
+        <p><span asp-validation-for="Entity.ShowId" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.StartTime"></label><br />
+            <input asp-for="Entity.StartTime" class="w-75" />
+        <p><span asp-validation-for="Entity.StartTime" class="text-danger"></span></p>
+
+        <p>
+            <input type="submit" value="Add" class="btn btn-success w-75" />
+        <p><a asp-action="Index" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger w-75">Back</a></p>
+    </form>
+</div>
+
