@@ -80,7 +80,7 @@ namespace WebApplication.Controllers
         {
             StaffViewModel model = new StaffViewModel();
             model.PageViewModel = new PageViewModel { CurrentPage = page };
-            model.SelectList = db.Positions.ToList();
+            model.SelectList = db.Positions.Select(p => p.Name).ToList();
 
             return View(model);
         }
@@ -88,7 +88,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(StaffViewModel model)
         {
-            model.SelectList = db.Positions.ToList();
+            model.SelectList = db.Positions.Select(p => p.Name).ToList();
 
             var position = db.Positions.FirstOrDefault(g => g.Name == model.PositionName);
             if (position == null)
@@ -120,7 +120,7 @@ namespace WebApplication.Controllers
                 StaffViewModel model = new StaffViewModel();
                 model.PageViewModel = new PageViewModel { CurrentPage = page };
                 model.Entity = staff;
-                model.SelectList = db.Positions.ToList();
+                model.SelectList = db.Positions.Select(p => p.Name).ToList();
                 model.PositionName = model.Entity.Position.Name;
 
                 return View(model);
@@ -132,7 +132,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(StaffViewModel model)
         {
-            model.SelectList = db.Positions.ToList();
+            model.SelectList = db.Positions.Select(p => p.Name).ToList();
 
             var position = db.Positions.FirstOrDefault(g => g.Name == model.PositionName);
             if (position == null)

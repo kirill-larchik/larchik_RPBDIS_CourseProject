@@ -183,10 +183,7 @@ namespace WebApplication.Controllers
                 return NotFound();
 
             bool deleteFlag = false;
-            string message = "Do you want to delete this entity";
-
-            if (db.Shows.Any(s => s.ShowId == appeal.ShowId))
-                message = "This entity has entities, which dependents from this. Do you want to delete this entity and other, which dependents from this?";
+            string message = "Do you want to delete this entity"; 
 
             AppealsViewModel model = new AppealsViewModel();
             model.Entity = appeal;

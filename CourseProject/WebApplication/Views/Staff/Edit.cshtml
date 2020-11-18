@@ -25,7 +25,7 @@
             <datalist id="positions">
                 @foreach (var item in Model.SelectList)
                 {
-                    <option value="@item.Name"></option>
+                    <option value="@item"></option>
                 }
             </datalist>
         <p><span asp-validation-for="Entity.PositionId" class="text-danger"></span></p>

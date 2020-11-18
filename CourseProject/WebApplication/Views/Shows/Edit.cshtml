@@ -50,7 +50,7 @@
             <datalist id="genres">
                 @foreach (var item in Model.SelectList)
                 {
-                    <option value="@item.GenreName"></option>
+                    <option value="@item"></option>
                 }
             </datalist>
         <p><span asp-validation-for="Entity.Genre.GenreName" class="text-danger"></span></p>

@@ -80,7 +80,7 @@ namespace WebApplication.Controllers
         {
             ShowsViewModel model = new ShowsViewModel();
             model.PageViewModel = new PageViewModel { CurrentPage = page };
-            model.SelectList = db.Genres.ToList();
+            model.SelectList = db.Genres.Select(g => g.GenreName).ToList();
 
             return View(model);
         }
@@ -88,7 +88,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ShowsViewModel model)
         {
-            model.SelectList = db.Genres.ToList();
+            model.SelectList = db.Genres.Select(g => g.GenreName).ToList();
 
             var genre = db.Genres.FirstOrDefault(g => g.GenreName == model.GenreName);
             if (genre == null)
@@ -128,7 +128,7 @@ namespace WebApplication.Controllers
                 ShowsViewModel model = new ShowsViewModel();
                 model.PageViewModel = new PageViewModel { CurrentPage = page };
                 model.Entity = show;
-                model.SelectList = db.Genres.ToList();
+                model.SelectList = db.Genres.Select(g => g.GenreName).ToList();
                 model.GenreName = model.Entity.Genre.GenreName;
 
                 return View(model);
@@ -140,7 +140,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ShowsViewModel model)
         {
-            model.SelectList = db.Genres.ToList();
+            model.SelectList = db.Genres.Select(g => g.GenreName).ToList();
 
             var genre = db.Genres.FirstOrDefault(g => g.GenreName == model.GenreName);
             if (genre == null)
@@ -211,7 +211,7 @@ namespace WebApplication.Controllers
             bool deleteFlag = false;
             string message = "Do you want to delete this entity";
 
-            if (db.Timetables.Any(s => s.ShowId == show.ShowId))
+            if (db.Timetables.Any(s => s.ShowId == show.ShowId) || db.Appeals.Any(s => s.ShowId == show.ShowId))
                 message = "This entity has entities, which dependents from this. Do you want to delete this entity and other, which dependents from this?";
 
             ShowsViewModel model = new ShowsViewModel();

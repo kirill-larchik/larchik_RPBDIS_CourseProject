@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,25 +79,36 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index", new { page });
         }
 
-
-        public ActionResult Create(int page)
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        public async Task<ActionResult> Create(int page)
         {
             TimetablesViewModel model = new TimetablesViewModel();
             model.PageViewModel = new PageViewModel { CurrentPage = page };
-            model.SelectList = db.Shows.ToList();
+
+            model.ShowsSelectList = await db.Shows.Select(s => s.Name).ToListAsync();
+            model.StaffSelectList = await db.Staff.Select(s => s.FullName).ToListAsync();
 
             return View(model);
         }
 
+        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 100)]
         [HttpPost]
         public async Task<IActionResult> Create(TimetablesViewModel model)
         {
-            model.SelectList = db.Shows.ToList();
+            model.ShowsSelectList = await db.Shows.Select(s => s.Name).ToListAsync();
+            model.StaffSelectList = await db.Staff.Select(s => s.FullName).ToListAsync();
 
             var show = db.Shows.FirstOrDefault(s => s.Name == model.ShowName);
             if (show == null)
             {
                 ModelState.AddModelError(string.Empty, "Please select show from list.");
+                return View(model);
+            }
+
+            var staff = db.Staff.FirstOrDefault(s => s.FullName == model.StaffName);
+            if (staff == null)
+            {
+                ModelState.AddModelError(string.Empty, "Please select staff from list.");
                 return View(model);
             }
 
@@ -107,6 +119,7 @@ namespace WebApplication.Controllers
                 {
                     model.Entity.ShowId = show.ShowId;
                     model.Entity.EndTime = model.Entity.StartTime + show.Duration;
+                    model.Entity.StaffId = staff.StaffId;
 
                     await db.Timetables.AddAsync(model.Entity);
                     await db.SaveChangesAsync();
@@ -126,14 +139,16 @@ namespace WebApplication.Controllers
 
         public async Task<IActionResult> Edit(int id, int page)
         {
-            Timetable timetable = await db.Timetables.Include(t => t.Show).FirstOrDefaultAsync(t => t.TimetableId == id);
+            Timetable timetable = await db.Timetables.Include(t => t.Show).Include(t => t.Staff).FirstOrDefaultAsync(t => t.TimetableId == id);
             if (timetable != null)
             {
                 TimetablesViewModel model = new TimetablesViewModel();
                 model.PageViewModel = new PageViewModel { CurrentPage = page };
                 model.Entity = timetable;
-                model.SelectList = db.Shows.ToList();
+                model.ShowsSelectList = db.Shows.Select(s => s.Name).AsNoTracking().AsQueryable();
+                model.StaffSelectList = db.Staff.Select(s => s.FullName).AsNoTracking().AsQueryable();
                 model.ShowName = model.Entity.Show.Name;
+                model.StaffName = model.Entity.Staff.FullName;
 
                 return View(model);
             }
@@ -144,12 +159,20 @@ namespace WebApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(TimetablesViewModel model)
         {
-            model.SelectList = db.Shows.ToList();
+            model.ShowsSelectList = db.Shows.Select(s => s.Name).AsNoTracking().AsQueryable();
+            model.StaffSelectList = db.Staff.Select(s => s.FullName).AsNoTracking().AsQueryable();
 
             var show = db.Shows.FirstOrDefault(s => s.Name == model.ShowName);
             if (show == null)
             {
                 ModelState.AddModelError(string.Empty, "Please select show from list.");
+                return View(model);
+            }
+
+            var staff = db.Staff.FirstOrDefault(s => s.FullName == model.StaffName);
+            if (staff == null)
+            {
+                ModelState.AddModelError(string.Empty, "Please select staff from list.");
                 return View(model);
             }
 
@@ -169,6 +192,8 @@ namespace WebApplication.Controllers
 
                         timetable.StartTime = model.Entity.StartTime;
                         timetable.EndTime = timetable.StartTime + show.Duration;
+
+                        timetable.StaffId = staff.StaffId;
 
                         db.Timetables.Update(timetable);
                         await db.SaveChangesAsync();
@@ -200,8 +225,8 @@ namespace WebApplication.Controllers
             bool deleteFlag = false;
             string message = "Do you want to delete this entity";
 
-            if (db.Timetables.Any(t => t.TimetableId == timetable.TimetableId))
-                message = "This entity has entities, which dependents from this. Do you want to delete this entity and other, which dependents from this?";
+            //if (db.Timetables.Any(t => t.TimetableId == timetable.TimetableId))
+            //    message = "This entity has entities, which dependents from this. Do you want to delete this entity and other, which dependents from this?";
 
             TimetablesViewModel model = new TimetablesViewModel();
             model.Entity = timetable;
@@ -219,6 +244,7 @@ namespace WebApplication.Controllers
                 return NotFound();
 
             db.Timetables.Remove(timetable);
+            await db.SaveChangesAsync();
 
             cache.Clean();
 
@@ -229,7 +255,7 @@ namespace WebApplication.Controllers
 
         private IQueryable<Timetable> GetSortedEntities(SortState sortState, int dayOfWeek, int month, int year)
         {
-            IQueryable<Timetable> timtetables = db.Timetables.Include(t => t.Show).AsQueryable();
+            IQueryable<Timetable> timtetables = db.Timetables.Include(t => t.Show).Include(t => t.Staff).AsQueryable();
             switch (sortState)
             {
                 case SortState.TimetableDayOfWeekAsc:
@@ -267,6 +293,12 @@ namespace WebApplication.Controllers
                     break;
                 case SortState.TimetablEndTimeDesc:
                     timtetables = timtetables.OrderByDescending(t => t.EndTime);
+                    break;
+                case SortState.StaffFullNameAsc:
+                    timtetables = timtetables.OrderBy(t => t.Staff.FullName);
+                    break;
+                case SortState.StaffFullNameDesc:
+                    timtetables = timtetables.OrderByDescending(t => t.Staff.FullName);
                     break;
             }
 

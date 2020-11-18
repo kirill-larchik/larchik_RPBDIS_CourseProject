@@ -16,7 +16,7 @@ namespace WebApplication.ViewModels.Entities
         [Display(Name = "Show")]
         public Show Entity { get; set; }
         [Display(Name = "Genres")]
-        public IEnumerable<Genre> SelectList { get; set; }
+        public IEnumerable<string> SelectList { get; set; }
 
         [Display(Name = "Genre")]
         public string GenreName { get; set; }

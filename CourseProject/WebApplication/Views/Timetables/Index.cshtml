@@ -27,40 +27,45 @@
         </fieldset>
     </div>
 
-    <table class="table table-hover table-sm">
-        <thead class="thead-dark text-center text-white">
+    <table class="table table-hover table-sm text-break">
+        <thead class="thead-dark text-center text-white align-middle">
             <tr>
-                <th>
+                <th style="width: 10%;">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.TimetableDayOfWeekSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.DayOfWeek)
                     </a>
                 </th>
-                <th>
+                <th style="width: 10%;" class="align-middle">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.TimetableMonthSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.Month)
                     </a>
                 </th>
-                <th>
+                <th style="width: 10%;" class="align-middle">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.TimetableYearSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.Year)
                     </a>
                 </th>
-                <th>
+                <th style="width: 15%;" class="align-middle">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.ShowNameSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
-                        @Html.DisplayNameFor(e => e.Entity.Show.Name)
+                        @Html.DisplayNameFor(e => e.Entity.ShowId)
                     </a>
                 </th>
-                <th>
+                <th style="width: 10%;">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.TimetableStartTimeSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.StartTime)
                     </a>
                 </th>
-                <th>
+                <th style="width: 10%;">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.TimetableEndTimeSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.EndTime)
                     </a>
                 </th>
-                <th class="align-middle">Modification</th>
+                <th style="width: 15%;" class="align-middle">
+                    <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.StaffFullNameSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
+                        @Html.DisplayNameFor(e => e.Entity.StaffId)
+                    </a>
+                </th>
+                <th style="width: 20%;" class="align-middle">Modification</th>
             </tr>
         </thead>
 
@@ -74,6 +79,7 @@
                     <td>@entity.Show.Name</td>
                     <td class="text-center">@entity.StartTime</td>
                     <td class="text-center">@entity.EndTime</td>
+                    <td>@entity.Staff.FullName</td>
                     <td class="text-center">
                         <a asp-action="Edit" asp-route-id="@entity.TimetableId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-warning">Edit</a>
                         <a asp-action="Delete" asp-route-id="@entity.TimetableId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger">Delete</a>

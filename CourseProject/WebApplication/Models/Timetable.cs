@@ -22,7 +22,6 @@ namespace WebApplication.Models
         [Display(Name = "Year")]
         public int Year { get; set; }
 
-        [Required]
         [Display(Name = "Show")]
         public int ShowId { get; set; }
 
@@ -35,6 +34,7 @@ namespace WebApplication.Models
         [Display(Name = "End time")]
         public TimeSpan? EndTime { get; set; }
 
+        [Display(Name = "Staff")]
         public int StaffId { get; set; }
 
         public Show Show { get; set; }

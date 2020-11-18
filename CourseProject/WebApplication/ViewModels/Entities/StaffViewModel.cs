@@ -15,7 +15,7 @@ namespace WebApplication.ViewModels.Entities
         [Display(Name = "Employee")]
         public Staff Entity { get; set; }
         [Display(Name = "Positions")]
-        public IEnumerable<Position> SelectList { get; set; }
+        public IEnumerable<string> SelectList { get; set; }
         [Display(Name = "Position")]
         public string PositionName { get; set; }
 
