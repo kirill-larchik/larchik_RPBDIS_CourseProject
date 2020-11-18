@@ -18,7 +18,7 @@ namespace WebApplication.ViewModels
         ShowNameDesc,
         ShowDescriptionAsc,
         ShowDescriptionDesc,
-        // Timetables
+        //Timetables
         TimetableDayOfWeekAsc,
         TimetableDayOfWeekDesc,
         TimetableMonthAsc,
@@ -28,7 +28,20 @@ namespace WebApplication.ViewModels
         TimetableStartTimeAsc,
         TimetableStartTimeDesc,
         TimetablEndTimeAsc,
-        TimetablEndTimeDesc
+        TimetablEndTimeDesc,
+        //Appeals
+        AppealFullNameAsc,
+        AppealFullNameDesc,
+        AppealOrganizationAsc,
+        AppealOrganizationDesc,
+        AppealGoalRequestAsc,
+        AppealGoalRequestDesc,
+        //Staff
+        StaffFullNameAsc,
+        StaffFullNameDesc,
+        //Positions
+        PositionsNameAsc,
+        PositionsNameDesc
     }
 
     public class SortViewModel
@@ -48,6 +61,16 @@ namespace WebApplication.ViewModels
         public SortState TimetableStartTimeSort { get; set; }
         public SortState TimetableEndTimeSort { get; set; }
 
+        //Appeals
+        public SortState AppealFullNameSort { get; set; }
+        public SortState AppealOrganizationSort { get; set; }
+        public SortState AppealGoalRequestSort { get; set; }
+
+        //Staff
+        public SortState StaffFullNameSort { get; set; }
+
+        //Positions
+        public SortState PositionNameSort { get; set; }
 
         public SortState CurrentState { get; set; }
         public SortViewModel(SortState state)
@@ -55,6 +78,7 @@ namespace WebApplication.ViewModels
             //Genres
             GenreNameSort = state == SortState.GenreNameAsc ? SortState.GenreNameDesc : SortState.GenreNameAsc;
             GenreDescriptionSort = state == SortState.GenreDescriptionAsc ? SortState.GenreDescriptionDesc : SortState.GenreDescriptionAsc;
+
             //Shows
             ShowNameSort = state == SortState.ShowNameAsc ? SortState.ShowNameDesc : SortState.ShowNameAsc;
             ShowDescriptionSort = state == SortState.ShowDescriptionAsc ? SortState.ShowDescriptionDesc : SortState.ShowDescriptionAsc;
@@ -65,6 +89,17 @@ namespace WebApplication.ViewModels
             TimetableYearSort = state == SortState.TimetableYearAsc ? SortState.TimetableYearDesc : SortState.TimetableYearAsc;
             TimetableStartTimeSort = state == SortState.TimetableStartTimeAsc ? SortState.TimetableStartTimeDesc : SortState.TimetableStartTimeAsc;
             TimetableEndTimeSort = state == SortState.TimetablEndTimeAsc ? SortState.TimetablEndTimeDesc : SortState.TimetablEndTimeAsc;
+
+            //Appeals
+            AppealFullNameSort = state == SortState.AppealFullNameAsc ? SortState.AppealFullNameDesc : SortState.AppealFullNameAsc;
+            AppealOrganizationSort = state == SortState.AppealOrganizationAsc ? SortState.AppealOrganizationDesc : SortState.AppealOrganizationAsc;
+            AppealGoalRequestSort = state == SortState.AppealGoalRequestAsc ? SortState.AppealGoalRequestDesc : SortState.AppealGoalRequestAsc;
+
+            //Staff
+            StaffFullNameSort = state == SortState.StaffFullNameAsc ? SortState.StaffFullNameDesc : SortState.StaffFullNameAsc;
+
+            //Positions
+            PositionNameSort = state == SortState.PositionsNameAsc ? SortState.PositionsNameDesc : SortState.PositionsNameAsc;
 
             CurrentState = state;
         }

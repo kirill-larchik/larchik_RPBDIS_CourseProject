@@ -10,6 +10,7 @@ namespace WebApplication.Models
         public Show()
         {
             Timetables = new HashSet<Timetable>();
+            Appeals = new HashSet<Appeal>();
         }
 
         [Required]
@@ -56,5 +57,6 @@ namespace WebApplication.Models
         [Display(Name = "Genre")]
         public Genre Genre { get; set; }
         public ICollection<Timetable> Timetables { get; set; }
+        public ICollection<Appeal> Appeals { get; set; }
     }
 }

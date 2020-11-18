@@ -22,20 +22,22 @@ namespace WebApplication.Models
         [Display(Name = "Year")]
         public int Year { get; set; }
 
-        [Required]
         [Display(Name = "Show")]
         public int ShowId { get; set; }
 
         [Required]
+        [Display(Name = "Start time")]
         [DataType(DataType.Time)]
         [Range(typeof(TimeSpan), "00:00:00", "20:59:59")]
         public TimeSpan StartTime { get; set; }
 
-        //TODO: Remove NULL
+        [Display(Name = "End time")]
         public TimeSpan? EndTime { get; set; }
 
-        public int? StaffId { get; set; }
+        [Display(Name = "Staff")]
+        public int StaffId { get; set; }
 
         public Show Show { get; set; }
+        public Staff Staff { get; set; }
     }
 }

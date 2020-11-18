@@ -18,5 +18,9 @@ namespace WebApplication.Data
         public virtual DbSet<Genre> Genres { get; set; }
         public virtual DbSet<Show> Shows { get; set; }
         public virtual DbSet<Timetable> Timetables { get; set; }
+        public DbSet<Appeal> Appeals { get; set; }
+        public virtual DbSet<Staff> Staff { get; set; }
+        public virtual DbSet<Position> Positions { get; set; }
+
     }
 }

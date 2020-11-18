@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,23 +8,21 @@ using WebApplication.ViewModels.Filters;
 
 namespace WebApplication.ViewModels.Entities
 {
-    public class ShowsViewModel : IEntitiesViewModel<Show>
+    public class StaffViewModel : IEntitiesViewModel<Staff>
     {
-        [Display(Name = "Shows")]
-        public IEnumerable<Show> Entities { get; set; }
-        [Display(Name = "Show")]
-        public Show Entity { get; set; }
-        [Display(Name = "Genres")]
+        [Display(Name = "Staff")]
+        public IEnumerable<Staff> Entities { get; set; }
+        [Display(Name = "Employee")]
+        public Staff Entity { get; set; }
+        [Display(Name = "Positions")]
         public IEnumerable<string> SelectList { get; set; }
-
-        [Display(Name = "Genre")]
-        public string GenreName { get; set; }
+        [Display(Name = "Position")]
+        public string PositionName { get; set; }
 
 
         public PageViewModel PageViewModel { get; set; }
         public DeleteViewModel DeleteViewModel { get; set; }
         public SortViewModel SortViewModel { get; set; }
-        public ShowsFilterViewModel ShowsFilterViewModel { get; set; }
-
+        public StaffFilterViewModel StaffFilterViewModel { get; set; }
     }
 }

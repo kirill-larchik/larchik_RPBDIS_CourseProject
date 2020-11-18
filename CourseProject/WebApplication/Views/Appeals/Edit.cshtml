@@ -1,0 +1,48 @@
+﻿@model WebApplication.ViewModels.Entities.AppealsViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container text-center w-50">
+    <form method="post">
+        <div>
+            <input hidden asp-for="PageViewModel.CurrentPage" value="@Model.PageViewModel.CurrentPage" />
+            <input hidden asp-for="Entity.AppealId" value="@Model.Entity.AppealId" />
+        </div>
+
+        <h2>Edit entity</h2>
+
+        <div asp-validation-summary="All" class="text-danger text-center w-100 m-lg-0"></div>
+
+        <p>
+            <label asp-for="Entity.FullName"></label><br />
+            <input asp-for="Entity.FullName" class="w-75" />
+        <p><span asp-validation-for="Entity.FullName" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.Organization"></label><br />
+            <input asp-for="Entity.Organization" class="w-75" />
+        <p><span asp-validation-for="Entity.Organization" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.ShowId"></label><br />
+            <input type="search" list="genres" asp-for="ShowName" class="w-75" />
+            <datalist id="genres">
+                @foreach (var item in Model.SelectList)
+                {
+                    <option value="@item.Name"></option>
+                }
+            </datalist>
+        <p><span asp-validation-for="Entity.ShowId" class="text-danger"></span></p>
+
+        <p>
+            <label asp-for="Entity.GoalRequest"></label><br />
+            <input asp-for="Entity.GoalRequest" class="w-75" />
+        <p><span asp-validation-for="Entity.GoalRequest" class="text-danger"></span></p>
+
+        <p>
+            <input type="submit" value="Edit" class="btn btn-success w-75" />
+        <p><a asp-action="Index" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger w-75">Back</a></p>
+    </form>
+</div>
+

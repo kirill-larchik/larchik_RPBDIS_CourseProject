@@ -32,16 +32,27 @@
             <label asp-for="Entity.ShowId"></label><br />
             <input type="search" list="shows" asp-for="ShowName" class="w-75" />
             <datalist id="shows">
-                @foreach (var item in Model.SelectList)
+                @foreach (var item in Model.ShowsSelectList)
                 {
-                    <option value="@item.Name"></option>
+                    <option value="@item"></option>
                 }
             </datalist>
         <p><span asp-validation-for="Entity.ShowId" class="text-danger"></span></p>
 
         <p>
+            <label asp-for="Entity.StaffId"></label><br />
+            <input type="search" list="staff" asp-for="StaffName" class="w-75" />
+            <datalist id="staff">
+                @foreach (var item in Model.StaffSelectList)
+                {
+                    <option value="@item"></option>
+                }
+            </datalist>
+        <p><span asp-validation-for="Entity.StaffId" class="text-danger"></span></p>
+
+        <p>
             <label asp-for="Entity.StartTime"></label><br />
-            <input asp-for="Entity.StartTime" class="w-75" />
+            <input type="time" step="1" asp-for="Entity.StartTime" class="w-75" />
         <p><span asp-validation-for="Entity.StartTime" class="text-danger"></span></p>
 
         <p>
