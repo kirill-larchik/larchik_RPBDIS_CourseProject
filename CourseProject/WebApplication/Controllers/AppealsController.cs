@@ -16,7 +16,7 @@ using WebApplication.ViewModels.Filters;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class AppealsController : Controller
     {
         private readonly TvChannelContext db;
@@ -61,6 +61,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Index(AppealsFilterViewModel filterModel, int page)
         {
             AppealsFilterViewModel filter = HttpContext.Session.Get<AppealsFilterViewModel>(filterKey);
@@ -88,6 +89,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AppealsViewModel model)
         {
             model.SelectList = db.Shows.ToList();
@@ -135,6 +137,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(AppealsViewModel model)
         {
             model.SelectList = db.Shows.ToList();
@@ -194,6 +197,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(AppealsViewModel model)
         {
             Appeal appeal = await db.Appeals.FindAsync(model.Entity.AppealId);

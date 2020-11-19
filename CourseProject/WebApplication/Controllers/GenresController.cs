@@ -15,7 +15,7 @@ using WebApplication.ViewModels.Filters;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class GenresController : Controller
     {
         private readonly TvChannelContext db;
@@ -60,6 +60,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Index(GenresFilterViewModel filterModel, int page)
         {
             GenresFilterViewModel filter = HttpContext.Session.Get<GenresFilterViewModel>(filterKey);
@@ -86,6 +87,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GenresViewModel model)
         {
             if (ModelState.IsValid & CheckUniqueValues(model.Entity))
@@ -117,6 +119,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(GenresViewModel model)
         {
             if (ModelState.IsValid & CheckUniqueValues(model.Entity))
@@ -164,6 +167,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(GenresViewModel model)
         {
             Genre genre = await db.Genres.FindAsync(model.Entity.GenreId);

@@ -40,6 +40,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RoleViewModel model)
         {
             if (!string.IsNullOrEmpty(model.RoleName))
@@ -61,6 +62,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string name)
         {
             IdentityRole role = await roleManager.FindByNameAsync(name);
@@ -101,6 +103,7 @@ namespace WebApplication.Controllers
         } 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
             User user = await userManager.FindByIdAsync(userId);
