@@ -63,6 +63,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Index(TimetablesFilterViewModel filterModel, int page)
         {
             TimetablesFilterViewModel filter = HttpContext.Session.Get<TimetablesFilterViewModel>(filterKey);
@@ -79,7 +80,7 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index", new { page });
         }
 
-        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Create(int page)
         {
             TimetablesViewModel model = new TimetablesViewModel();
@@ -91,8 +92,9 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
-        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 100)]
         [HttpPost]
+        [Authorize(Roles = "admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TimetablesViewModel model)
         {
             model.ShowsSelectList = await db.Shows.Select(s => s.Name).ToListAsync();
@@ -137,6 +139,7 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, int page)
         {
             Timetable timetable = await db.Timetables.Include(t => t.Show).Include(t => t.Staff).FirstOrDefaultAsync(t => t.TimetableId == id);
@@ -157,6 +160,8 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(TimetablesViewModel model)
         {
             model.ShowsSelectList = db.Shows.Select(s => s.Name).AsNoTracking().AsQueryable();
@@ -216,6 +221,7 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int id, int page)
         {
             Timetable timetable = await db.Timetables.FindAsync(id);
@@ -237,6 +243,8 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(TimetablesViewModel model)
         {
             Timetable timetable = await db.Timetables.FindAsync(model.Entity.TimetableId);

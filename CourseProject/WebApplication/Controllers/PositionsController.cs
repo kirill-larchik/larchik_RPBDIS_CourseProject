@@ -15,7 +15,7 @@ using WebApplication.ViewModels.Filters;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class PositionsController : Controller
     {
         private readonly TvChannelContext db;
@@ -60,6 +60,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Index(PositionsFilterViewModel filterModel, int page)
         {
             PositionsFilterViewModel filter = HttpContext.Session.Get<PositionsFilterViewModel>(filterKey);
@@ -85,6 +86,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PositionsViewModel model)
         {
             if (ModelState.IsValid & CheckUniqueValues(model.Entity))
@@ -116,6 +118,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(PositionsViewModel model)
         {
             if (ModelState.IsValid & CheckUniqueValues(model.Entity))
@@ -162,6 +165,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(PositionsViewModel model)
         {
             Position position = await db.Positions.FindAsync(model.Entity.PositionId);

@@ -46,6 +46,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UsersViewModel model)
         {
             if (ModelState.IsValid & CheckUniqueValues(model.Entity))
@@ -90,6 +91,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UsersViewModel model)
         {
             if (ModelState.IsValid & CheckUniqueValues(model.Entity))
@@ -141,6 +143,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(UsersViewModel model)
         {
             User user = await manager.FindByIdAsync(model.Entity.Id);
@@ -188,6 +191,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(UsersViewModel model)
         {
             if (ModelState.IsValid)

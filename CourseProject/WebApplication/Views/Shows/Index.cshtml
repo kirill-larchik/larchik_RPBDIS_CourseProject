@@ -9,7 +9,10 @@
     </h2>
 
     <div class="container">
-        <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
+        @if (User.IsInRole("admin"))
+        {
+            <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
+        }
 
         <fieldset class="p-2 float-right">
             <form method="post" asp-route-page="@Model.PageViewModel.CurrentPage">
@@ -42,23 +45,26 @@
                         @Html.DisplayNameFor(e => e.Entity.Genre.GenreName)
                     </a>
                 </th>
-                <th class="w-25 align-middle">Modification</th>
+                 <th class="w-25 align-middle">Modification</th>
             </tr>
         </thead>
 
         <tbody>
             @foreach (var entity in Model.Entities)
             {
-                <tr>
-                    <td>@entity.Name</td>
-                    <td>@entity.Description</td>
-                    <td>@entity.Genre.GenreName</td>
-                    <td class="text-center">
-                        <a asp-action="Details" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-success">Details</a>
+            <tr>
+                <td>@entity.Name</td>
+                <td>@entity.Description</td>
+                <td>@entity.Genre.GenreName</td>
+                <td class="text-center">
+                    <a asp-action="Details" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-success">Details</a>
+                    @if (User.IsInRole("admin"))
+                    {
                         <a asp-action="Edit" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-warning">Edit</a>
                         <a asp-action="Delete" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
+                    }
+                </td>
+            </tr>
             }
         </tbody>
     </table>

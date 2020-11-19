@@ -9,7 +9,10 @@
     </h2>
 
     <div class="container">
-        <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
+        @if (User.IsInRole("admin"))
+        {
+            <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
+        }
 
         <fieldset class="p-2 float-right">
             <form method="post" asp-route-page="@Model.PageViewModel.CurrentPage">
@@ -65,26 +68,33 @@
                         @Html.DisplayNameFor(e => e.Entity.StaffId)
                     </a>
                 </th>
-                <th style="width: 20%;" class="align-middle">Modification</th>
+
+                @if (User.IsInRole("admin"))
+                {
+                    <th style="width: 20%;" class="align-middle">Modification</th>
+                }
             </tr>
         </thead>
 
         <tbody>
             @foreach (var entity in Model.Entities)
             {
-                <tr>
-                    <td class="text-center">@entity.DayOfWeek</td>
-                    <td class="text-center">@entity.Month</td>
-                    <td class="text-center">@entity.Year</td>
-                    <td>@entity.Show.Name</td>
-                    <td class="text-center">@entity.StartTime</td>
-                    <td class="text-center">@entity.EndTime</td>
-                    <td>@entity.Staff.FullName</td>
+            <tr>
+                <td class="text-center">@entity.DayOfWeek</td>
+                <td class="text-center">@entity.Month</td>
+                <td class="text-center">@entity.Year</td>
+                <td>@entity.Show.Name</td>
+                <td class="text-center">@entity.StartTime</td>
+                <td class="text-center">@entity.EndTime</td>
+                <td>@entity.Staff.FullName</td>
+                @if (User.IsInRole("admin"))
+                {
                     <td class="text-center">
                         <a asp-action="Edit" asp-route-id="@entity.TimetableId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-warning">Edit</a>
                         <a asp-action="Delete" asp-route-id="@entity.TimetableId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger">Delete</a>
                     </td>
-                </tr>
+                }
+            </tr>
             }
         </tbody>
     </table>

@@ -16,7 +16,7 @@ using WebApplication.ViewModels.Filters;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class StaffController : Controller
     {
         private readonly TvChannelContext db;
@@ -61,6 +61,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Index(StaffFilterViewModel filterModel, int page)
         {
             StaffFilterViewModel filter = HttpContext.Session.Get<StaffFilterViewModel>(filterKey);
@@ -86,6 +87,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StaffViewModel model)
         {
             model.SelectList = db.Positions.Select(p => p.Name).ToList();
@@ -130,6 +132,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(StaffViewModel model)
         {
             model.SelectList = db.Positions.Select(p => p.Name).ToList();
@@ -186,6 +189,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(StaffViewModel model)
         {
             Staff staff = await db.Staff.FindAsync(model.Entity.StaffId);

@@ -47,7 +47,9 @@ namespace WebApplication.Controllers
                 IQueryable<Show> shows = GetSortedEntities(sortState, filter.Name, filter.GenreName);
 
                 int count = shows.Count();
+
                 int pageSize = 10;
+
                 model.PageViewModel = new PageViewModel(page, count, pageSize);
 
                 model.Entities = count == 0 ? new List<Show>() : shows.Skip((model.PageViewModel.CurrentPage - 1) * pageSize).Take(pageSize).ToList();
@@ -61,6 +63,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Index(ShowsFilterViewModel filterModel, int page)
         {
             ShowsFilterViewModel filter = HttpContext.Session.Get<ShowsFilterViewModel>(filterKey);
@@ -76,6 +79,7 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index", new { page });
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult Create(int page)
         {
             ShowsViewModel model = new ShowsViewModel();
@@ -86,6 +90,8 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ShowsViewModel model)
         {
             model.SelectList = db.Genres.Select(g => g.GenreName).ToList();
@@ -120,6 +126,7 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, int page)
         {
             Show show = await db.Shows.Include(s => s.Genre).FirstOrDefaultAsync(s => s.ShowId == id);
@@ -138,6 +145,8 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ShowsViewModel model)
         {
             model.SelectList = db.Genres.Select(g => g.GenreName).ToList();
@@ -202,6 +211,7 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int id, int page)
         {
             Show show = await db.Shows.FindAsync(id);
@@ -223,6 +233,8 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(ShowsViewModel model)
         {
             Show show = await db.Shows.FindAsync(model.Entity.ShowId);
