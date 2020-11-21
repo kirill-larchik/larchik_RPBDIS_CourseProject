@@ -1,0 +1,8 @@
+﻿@model WebApplication.ViewModels.Entities.StaffViewModel
+
+<div class="container text-center w-50 text-break">
+    <h3>Total work time for <br /> @Model.Entity.FullName <br />is:</h3>
+    <h2>@Model.TotalTime</h2>
+
+    <p><a asp-action="Index" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger w-75">Back</a></p>
+</div>

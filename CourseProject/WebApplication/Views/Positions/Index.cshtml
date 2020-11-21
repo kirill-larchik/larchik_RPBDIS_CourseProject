@@ -9,14 +9,19 @@
     </h2>
 
     <div class="container">
-        <a asp-action="Create" asp-route-sortState="@Model.SortViewModel.CurrentState" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
-
-        <fieldset class="p-2 float-right">
+        <fieldset class="p-2 float-left">
             <form method="post" asp-route-page="@Model.PageViewModel.CurrentPage">
-                <label asp-for="PositionsFilterViewModel.PositionName"></label>
-                <input name="PositionName" value="@Model.PositionsFilterViewModel.PositionName" />
-
-                <input type="submit" value="Filter" class="btn btn-primary" />
+                <p class="w-100">
+                    <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2 float-left">Add new entity</a>
+                    
+                    <input type="submit" value="Filter" class="btn btn-primary p-2 ml-3" />
+                    <a asp-action="ClearFilter" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger p-2">Clear</a>
+                </p>
+                
+                <p>
+                    <label asp-for="PositionsFilterViewModel.PositionName"></label>
+                    <input asp-for="PositionsFilterViewModel.PositionName" />
+                </p>
             </form>
         </fieldset>
     </div>

@@ -9,22 +9,44 @@
     </h2>
 
     <div class="container">
-        @if (User.IsInRole("admin"))
-        {
-            <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
-        }
-
-        <fieldset class="p-2 float-right">
+        <fieldset class="p-2 float-left w-100">
             <form method="post" asp-route-page="@Model.PageViewModel.CurrentPage">
-                <label asp-for="ShowsFilterViewModel.Name"></label>
-                <input name="Name" value="@Model.ShowsFilterViewModel.Name" />
+                <p class="w-100">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2 float-left">Add new entity</a>
+                    }
+                    <input type="submit" value="Filter" class="btn btn-primary p-2 ml-3" />
+                    <a asp-action="ClearFilter" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger p-2">Clear</a>
+                </p>
 
-                <label asp-for="ShowsFilterViewModel.GenreName"></label>
-                <input name="GenreName" value="@Model.ShowsFilterViewModel.GenreName" />
+                <p>
+                    <label asp-for="ShowsFilterViewModel.Name"></label>
+                    <input asp-for="ShowsFilterViewModel.Name" />
 
-                <input type="submit" value="Filter" class="btn btn-primary" />
+                    <label asp-for="ShowsFilterViewModel.GenreName"></label>
+                    <input asp-for="ShowsFilterViewModel.GenreName" />
+
+                    <label asp-for="ShowsFilterViewModel.StaffName"></label>
+                    <input asp-for="ShowsFilterViewModel.StaffName" />
+
+                    <label asp-for="ShowsFilterViewModel.Duration"></label>
+                    <input asp-for="ShowsFilterViewModel.Duration" step="1" />
+                </p>
+
+                <p>
+                    <label asp-for="ShowsFilterViewModel.StartDate"></label>
+                    <input asp-for="ShowsFilterViewModel.StartDate" />
+
+                    <label asp-for="ShowsFilterViewModel.EndDate"></label>
+                    <input asp-for="ShowsFilterViewModel.EndDate" />
+
+                    <label asp-for="ShowsFilterViewModel.ReleaseDate"></label>
+                    <input asp-for="ShowsFilterViewModel.ReleaseDate" />
+                </p>
             </form>
         </fieldset>
+
     </div>
 
     <table class="table table-hover table-sm">

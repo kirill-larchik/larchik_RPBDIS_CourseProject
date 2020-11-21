@@ -9,35 +9,40 @@
     </h2>
 
     <div class="container">
-        <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
-
-        <fieldset class="p-2 float-right">
+        <fieldset class="p-2 float-left">
             <form method="post" asp-route-page="@Model.PageViewModel.CurrentPage">
-                <label asp-for="StaffFilterViewModel.FullName"></label>
-                <input name="FullName" value="@Model.StaffFilterViewModel.FullName" />
+                <p class="w-100">
+                    <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2 float-left">Add new entity</a>
 
-                <label asp-for="StaffFilterViewModel.PositionName"></label>
-                <input name="PositionName" value="@Model.StaffFilterViewModel.PositionName" />
+                    <input type="submit" value="Filter" class="btn btn-primary p-2 ml-3" />
+                    <a asp-action="ClearFilter" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger p-2">Clear</a>
+                </p>
 
-                <input type="submit" value="Filter" class="btn btn-primary" />
+                <p>
+                    <label asp-for="StaffFilterViewModel.FullName"></label>
+                    <input asp-for="StaffFilterViewModel.FullName" />
+
+                    <label asp-for="StaffFilterViewModel.PositionName"></label>
+                    <input asp-for="StaffFilterViewModel.PositionName" />
+                </p>
             </form>
         </fieldset>
     </div>
 
-    <table class="table table-hover table-sm">
+    <table class="table table-hover table-sm text-break">
         <thead class="thead-dark text-center text-white">
             <tr>
-                <th class="w-50">
+                <th style="width: 40%;">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.StaffFullNameSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.FullName)
                     </a>
                 </th>
-                <th class="w-25">
+                <th style="width: 20%;">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.PositionNameSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.PositionId)
                     </a>
                 </th>
-                <th class="w-25 align-middle">Modification</th>
+                <th style="width: 40%;" class="align-middle">Modification</th>
             </tr>
         </thead>
 
@@ -47,9 +52,13 @@
                 <tr>
                     <td>@entity.FullName</td>
                     <td>@entity.Position.Name</td>
-                    <td class="text-center">
-                        <a asp-action="Edit" asp-route-id="@entity.StaffId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@entity.StaffId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger">Delete</a>
+                    <td class="text-center align-middle">
+                        <form asp-controller="Shows" asp-action="Index" method="post" asp-route-staffName="@entity.FullName">
+                            <input type="submit" value="List shows" class="btn btn-success float-left ml-3" />
+                        </form>
+                        <a asp-action="GetTotalTime" asp-route-id="@entity.StaffId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-success float-left ml-1">Get total time</a>
+                        <a asp-action="Edit" asp-route-id="@entity.StaffId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-warning float-left ml-1">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@entity.StaffId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger float-left ml-1">Delete</a>
                     </td>
                 </tr>
             }

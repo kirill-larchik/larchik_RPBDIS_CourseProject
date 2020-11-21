@@ -18,7 +18,7 @@ namespace WebApplication.ViewModels.Filters
         public int Year { get; set; }
 
         [Display(Name = "Show")]
-        public int Show { get; set; }
+        public string ShowName { get; set; }
 
         [Display(Name = "Start time")]
         public TimeSpan StartTime { get; set; }
@@ -27,6 +27,6 @@ namespace WebApplication.ViewModels.Filters
         public TimeSpan EndTime { get; set; }
 
         [Display(Name = "Staff")]
-        public int? Staff { get; set; }
+        public string StaffName { get; set; }
     }
 }

@@ -44,7 +44,7 @@ namespace WebApplication.Controllers
             {
                 model = new AppealsViewModel();
 
-                IQueryable<Appeal> appeals = GetSortedEntities(sortState, filter.FullName, filter.Organization, filter.ShowName, filter.GoalRequest);
+                IQueryable<Appeal> appeals = GetSortedEntities(sortState, filter);
 
                 int count = appeals.Count();
                 int pageSize = 10;
@@ -62,20 +62,26 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(AppealsFilterViewModel filterModel, int page)
+        public IActionResult Index(AppealsViewModel filterModel, int page)
         {
             AppealsFilterViewModel filter = HttpContext.Session.Get<AppealsFilterViewModel>(filterKey);
             if (filter != null)
             {
-                filter.FullName = filterModel.FullName;
-                filter.Organization = filterModel.Organization;
-                filter.ShowName = filterModel.ShowName;
-                filter.GoalRequest = filterModel.GoalRequest;
+                filter.FullName = filterModel.AppealsFilterViewModel.FullName;
+                filter.Organization = filterModel.AppealsFilterViewModel.Organization;
+                filter.ShowName = filterModel.AppealsFilterViewModel.ShowName;
+                filter.GoalRequest = filterModel.AppealsFilterViewModel.GoalRequest;
 
                 HttpContext.Session.Remove(filterKey);
                 HttpContext.Session.Set(filterKey, filter);
             }
 
+            return RedirectToAction("Index", new { page });
+        }
+
+        public IActionResult ClearFilter(int page)
+        {
+            HttpContext.Session.Remove(filterKey);
             return RedirectToAction("Index", new { page });
         }
 
@@ -234,7 +240,7 @@ namespace WebApplication.Controllers
                 return false;
         }
 
-        private IQueryable<Appeal> GetSortedEntities(SortState sortState, string fullName, string organization, string showName, string goalRequest)
+        private IQueryable<Appeal> GetSortedEntities(SortState sortState, AppealsFilterViewModel filterModel)
         {
             IQueryable<Appeal> appeals = db.Appeals.Include(a => a.Show).AsQueryable();
             switch (sortState)
@@ -265,14 +271,14 @@ namespace WebApplication.Controllers
                     break;
             }
 
-            if (!string.IsNullOrEmpty(fullName))
-                appeals = appeals.Where(a => a.FullName.Contains(fullName)).AsQueryable();
-            if (!string.IsNullOrEmpty(organization))
-                appeals = appeals.Where(a => a.Organization.Contains(organization)).AsQueryable();
-            if (!string.IsNullOrEmpty(showName))
-                appeals = appeals.Where(a => a.Show.Name.Contains(showName)).AsQueryable();
-            if (!string.IsNullOrEmpty(goalRequest))
-                appeals = appeals.Where(a => a.GoalRequest.Contains(goalRequest)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.FullName))
+                appeals = appeals.Where(a => a.FullName.Contains(filterModel.FullName)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.Organization))
+                appeals = appeals.Where(a => a.Organization.Contains(filterModel.Organization)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.ShowName))
+                appeals = appeals.Where(a => a.Show.Name.Contains(filterModel.ShowName)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.GoalRequest))
+                appeals = appeals.Where(a => a.GoalRequest.Contains(filterModel.GoalRequest)).AsQueryable();
 
             return appeals;
         }

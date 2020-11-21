@@ -16,7 +16,9 @@ namespace WebApplication.ViewModels.Filters
         public DateTime ReleaseDate { get; set; }
 
         [Display(Name = "Duration (Less)")]
+        [DataType(DataType.Time)]
         public TimeSpan Duration { get; set; }
+        public string DurationString { get; set; }
 
         [Display(Name = "Mark")]
         public int Mark { get; set; }
@@ -32,5 +34,16 @@ namespace WebApplication.ViewModels.Filters
 
         [Display(Name = "Description")]
         public string Description { get; set; }
+
+        [Display(Name = "Staff")]
+        public string StaffName { get; set; }
+
+        [Display(Name = "Start date")]
+        [DataType(DataType.Date)]
+        public DateTime StartDate { get; set; }
+
+        [Display(Name = "End date")]
+        [DataType(DataType.Date)]
+        public DateTime EndDate { get; set; }
     }
 }
