@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,16 +37,19 @@ namespace WebApplication.Controllers
             ShowsFilterViewModel filter = HttpContext.Session.Get<ShowsFilterViewModel>(filterKey);
             if (filter == null)
             {
-                filter = new ShowsFilterViewModel { Name = string.Empty, GenreName = string.Empty };
+                filter = new ShowsFilterViewModel { Name = string.Empty, GenreName = string.Empty, StartDate = default, EndDate = default, Duration = default, ReleaseDate = default };
                 HttpContext.Session.Set(filterKey, filter);
             }
 
-            string modelKey = $"{typeof(Show).Name}-{page}-{sortState}-{filter.Name}-{filter.GenreName}";
+            string modelKey = $"{typeof(Show).Name}-{page}-{sortState}-{filter.Name}-{filter.GenreName}-{filter.StaffName}-{filter.StartDate}-{filter.EndDate}-{filter.DurationString}-{filter.ReleaseDate}";
             if (!cache.TryGetValue(modelKey, out ShowsViewModel model))
             {
                 model = new ShowsViewModel();
 
-                IQueryable<Show> shows = GetSortedEntities(sortState, filter.Name, filter.GenreName);
+                if (!string.IsNullOrEmpty(filter.DurationString))
+                    filter.Duration = TimeSpan.Parse(filter.DurationString);
+
+                IQueryable<Show> shows = GetSortedEntities(sortState, filter);
 
                 int count = shows.Count();
 
@@ -64,18 +69,38 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(ShowsFilterViewModel filterModel, int page)
+        public IActionResult Index(ShowsViewModel filterModel, int page, string staffName = null)
         {
-            ShowsFilterViewModel filter = HttpContext.Session.Get<ShowsFilterViewModel>(filterKey);
+            ShowsFilterViewModel filter;
+            if (!string.IsNullOrEmpty(staffName))
+            {
+                filter = new ShowsFilterViewModel { StaffName = staffName };
+                HttpContext.Session.Set(filterKey, filter);
+
+                return RedirectToAction("Index", new { page });
+            }
+
+            filter = HttpContext.Session.Get<ShowsFilterViewModel>(filterKey);
             if (filter != null)
             {
-                filter.Name = filterModel.Name;
-                filter.GenreName = filterModel.GenreName;
+                filter.Name = filterModel.ShowsFilterViewModel.Name;
+                filter.GenreName = filterModel.ShowsFilterViewModel.GenreName;
+                filter.StaffName = filterModel.ShowsFilterViewModel.StaffName;
+                filter.StartDate = filterModel.ShowsFilterViewModel.StartDate;
+                filter.EndDate = filterModel.ShowsFilterViewModel.EndDate;
+                filter.DurationString = filterModel.ShowsFilterViewModel.Duration.ToString();
+                filter.ReleaseDate = filterModel.ShowsFilterViewModel.ReleaseDate;
 
                 HttpContext.Session.Remove(filterKey);
                 HttpContext.Session.Set(filterKey, filter);
             }
 
+            return RedirectToAction("Index", new { page });
+        }
+
+        public IActionResult ClearFilter(int page)
+        {
+            HttpContext.Session.Remove(filterKey);
             return RedirectToAction("Index", new { page });
         }
 
@@ -282,7 +307,7 @@ namespace WebApplication.Controllers
                 return false;
         }
 
-        private IQueryable<Show> GetSortedEntities(SortState sortState, string name, string genreName)
+        private IQueryable<Show> GetSortedEntities(SortState sortState, ShowsFilterViewModel filterModel)
         {
             IQueryable<Show> shows = db.Shows.Include(s => s.Genre).AsQueryable();
             switch (sortState)
@@ -307,10 +332,43 @@ namespace WebApplication.Controllers
                     break;
             }
 
-            if (!string.IsNullOrEmpty(name))
-                shows = shows.Where(s => s.Name.Contains(name)).AsQueryable();
-            if (!string.IsNullOrEmpty(genreName))
-                shows = shows.Where(s => s.Genre.GenreName.Contains(genreName)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.Name))
+                shows = shows.Where(s => s.Name.Contains(filterModel.Name)).AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterModel.GenreName))
+                shows = shows.Where(s => s.Genre.GenreName.Contains(filterModel.GenreName)).AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterModel.StaffName))
+            {
+                shows = shows
+                    .Join(db.Timetables, s => s.ShowId, t => t.ShowId, (s, t) => new { s, t })
+                    .Join(db.Staff, st => st.t.StaffId, s => s.StaffId, (st, s) => new { st, s })
+                    .Where(sts => sts.s.FullName == filterModel.StaffName)
+                    .Select(sts => sts.st.s)
+                    .AsQueryable();
+            }
+
+            // Improve?
+            if (filterModel.StartDate != default || filterModel.EndDate != default)
+            {
+                shows = shows
+                .Join(db.Timetables, s => s.ShowId, t => t.ShowId, (s, t) => new { s, t })
+                .AsEnumerable()
+                .Select((q, d) => new { q, d = new DateTime(q.t.Year, q.t.Month, filterModel.StartDate.Day) })
+                .Where(q => q.d >= filterModel.StartDate && q.d <= filterModel.EndDate.AddDays(q.d.Day + 1))
+                .Select(q => q.q.s)
+                .AsQueryable();
+            }
+
+            if (filterModel.Duration != default)
+            {
+                shows = shows.Where(s => s.Duration <= filterModel.Duration).AsQueryable();
+            }
+
+            if (filterModel.ReleaseDate != default)
+            {
+                shows = shows.Where(s => s.ReleaseDate == filterModel.ReleaseDate).AsQueryable();
+            }
 
             return shows;
         }

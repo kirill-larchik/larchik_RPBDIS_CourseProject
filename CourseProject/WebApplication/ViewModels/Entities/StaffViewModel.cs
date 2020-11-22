@@ -19,6 +19,12 @@ namespace WebApplication.ViewModels.Entities
         [Display(Name = "Position")]
         public string PositionName { get; set; }
 
+        [Display(Name = "Show")]
+        public string ShowName { get; set; }
+
+
+        public TimeSpan TotalTime { get; set; }
+
 
         public PageViewModel PageViewModel { get; set; }
         public DeleteViewModel DeleteViewModel { get; set; }

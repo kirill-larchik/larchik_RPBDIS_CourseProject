@@ -43,7 +43,7 @@ namespace WebApplication.Controllers
             {
                 model = new GenresViewModel();
 
-                IQueryable<Genre> genres = GetSortedEntities(sortState, filter.GenreName, filter.GenreDescription);
+                IQueryable<Genre> genres = GetSortedEntities(sortState, filter);
 
                 int count = genres.Count();
                 int pageSize = 10;
@@ -61,18 +61,24 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(GenresFilterViewModel filterModel, int page)
+        public IActionResult Index(GenresViewModel filterModel, int page)
         {
             GenresFilterViewModel filter = HttpContext.Session.Get<GenresFilterViewModel>(filterKey);
             if (filter != null)
             {
-                filter.GenreName = filterModel.GenreName;
-                filter.GenreDescription = filterModel.GenreDescription;
+                filter.GenreName = filterModel.GenresFilterViewModel.GenreName;
+                filter.GenreDescription = filterModel.GenresFilterViewModel.GenreDescription;
 
                 HttpContext.Session.Remove(filterKey);
                 HttpContext.Session.Set(filterKey, filter);
             }
 
+            return RedirectToAction("Index", new { page });
+        }
+
+        public IActionResult ClearFilter(int page)
+        {
+            HttpContext.Session.Remove(filterKey);
             return RedirectToAction("Index", new { page });
         }
 
@@ -217,7 +223,7 @@ namespace WebApplication.Controllers
                 return false;
         }
 
-        private IQueryable<Genre> GetSortedEntities(SortState sortState, string genreName, string genreDescription)
+        private IQueryable<Genre> GetSortedEntities(SortState sortState, GenresFilterViewModel filterModel)
         {
             IQueryable<Genre> genres = db.Genres.AsQueryable();
 
@@ -237,10 +243,10 @@ namespace WebApplication.Controllers
                     break;
             }
 
-            if (!string.IsNullOrEmpty(genreName))
-                genres = genres.Where(g => g.GenreName.Contains(genreName)).AsQueryable();
-            if (!string.IsNullOrEmpty(genreDescription))
-                genres = genres.Where(g => g.GenreDescription.Contains(genreDescription)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.GenreName))
+                genres = genres.Where(g => g.GenreName.Contains(filterModel.GenreName)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.GenreDescription))
+                genres = genres.Where(g => g.GenreDescription.Contains(filterModel.GenreDescription)).AsQueryable();
 
             return genres;
         }

@@ -43,7 +43,7 @@ namespace WebApplication.Controllers
             {
                 model = new PositionsViewModel();
 
-                IQueryable<Position> positions = GetSortedEntities(sortState, filter.PositionName);
+                IQueryable<Position> positions = GetSortedEntities(sortState, filter);
 
                 int count = positions.Count();
                 int pageSize = 10;
@@ -61,17 +61,23 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(PositionsFilterViewModel filterModel, int page)
+        public IActionResult Index(PositionsViewModel filterModel, int page)
         {
             PositionsFilterViewModel filter = HttpContext.Session.Get<PositionsFilterViewModel>(filterKey);
             if (filter != null)
             {
-                filter.PositionName = filterModel.PositionName;
+                filter.PositionName = filterModel.PositionsFilterViewModel.PositionName;
 
                 HttpContext.Session.Remove(filterKey);
                 HttpContext.Session.Set(filterKey, filter);
             }
 
+            return RedirectToAction("Index", new { page });
+        }
+
+        public IActionResult ClearFilter(int page)
+        {
+            HttpContext.Session.Remove(filterKey);
             return RedirectToAction("Index", new { page });
         }
 
@@ -204,7 +210,7 @@ namespace WebApplication.Controllers
                 return false;
         }
 
-        private IQueryable<Position> GetSortedEntities(SortState sortState, string positionName)
+        private IQueryable<Position> GetSortedEntities(SortState sortState, PositionsFilterViewModel filterModel)
         {
             IQueryable<Position> positions = db.Positions.AsQueryable();
 
@@ -218,8 +224,8 @@ namespace WebApplication.Controllers
                     break;
             }
 
-            if (!string.IsNullOrEmpty(positionName))
-                positions = positions.Where(p => p.Name.Contains(positionName)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.PositionName))
+                positions = positions.Where(p => p.Name.Contains(filterModel.PositionName)).AsQueryable();
 
             return positions;
         }

@@ -37,16 +37,16 @@ namespace WebApplication.Controllers
             TimetablesFilterViewModel filter = HttpContext.Session.Get<TimetablesFilterViewModel>(filterKey);
             if (filter == null)
             {
-                filter = new TimetablesFilterViewModel { DayOfWeek = 0, Month = 0, Year = 0 };
+                filter = new TimetablesFilterViewModel { DayOfWeek = 0, Month = 0, Year = 0, StaffName = string.Empty, ShowName = string.Empty };
                 HttpContext.Session.Set(filterKey, filter);
             }
 
-            string modelKey = $"{typeof(Timetable).Name}-{page}-{sortState}-{filter.DayOfWeek}-{filter.Month}-{filter.Year}";
+            string modelKey = $"{typeof(Timetable).Name}-{page}-{sortState}-{filter.DayOfWeek}-{filter.Month}-{filter.Year}-{filter.StaffName}-{filter.ShowName}";
             if (!cache.TryGetValue(modelKey, out TimetablesViewModel model))
             {
                 model = new TimetablesViewModel();
 
-                IQueryable<Timetable> timetables = GetSortedEntities(sortState, filter.DayOfWeek, filter.Month, filter.Year);
+                IQueryable<Timetable> timetables = GetSortedEntities(sortState, filter);
 
                 int count = timetables.Count();
                 int pageSize = 10;
@@ -64,14 +64,16 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(TimetablesFilterViewModel filterModel, int page)
+        public IActionResult Index(TimetablesViewModel filterModel, int page = 1)
         {
             TimetablesFilterViewModel filter = HttpContext.Session.Get<TimetablesFilterViewModel>(filterKey);
             if (filter != null)
             {
-                filter.DayOfWeek = filterModel.DayOfWeek;
-                filter.Month = filterModel.Month;
-                filter.Year = filterModel.Year;
+                filter.DayOfWeek = filterModel.TimetablesFilterViewModel.DayOfWeek;
+                filter.Month = filterModel.TimetablesFilterViewModel.Month;
+                filter.Year = filterModel.TimetablesFilterViewModel.Year;
+                filter.StaffName = filterModel.TimetablesFilterViewModel.StaffName;
+                filter.ShowName = filterModel.TimetablesFilterViewModel.ShowName;
 
                 HttpContext.Session.Remove(filterKey);
                 HttpContext.Session.Set(filterKey, filter);
@@ -79,6 +81,13 @@ namespace WebApplication.Controllers
 
             return RedirectToAction("Index", new { page });
         }
+
+        public IActionResult ClearFilter(int page)
+        {
+            HttpContext.Session.Remove(filterKey);
+            return RedirectToAction("Index", new { page });
+        }
+
 
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> Create(int page)
@@ -261,63 +270,71 @@ namespace WebApplication.Controllers
             return View(model);
         }
 
-        private IQueryable<Timetable> GetSortedEntities(SortState sortState, int dayOfWeek, int month, int year)
+        private IQueryable<Timetable> GetSortedEntities(SortState sortState, TimetablesFilterViewModel filterModel)
         {
-            IQueryable<Timetable> timtetables = db.Timetables.Include(t => t.Show).Include(t => t.Staff).AsQueryable();
+            IQueryable<Timetable> timetables = db.Timetables.Include(t => t.Show).Include(t => t.Staff).AsQueryable();
             switch (sortState)
             {
                 case SortState.TimetableDayOfWeekAsc:
-                    timtetables = timtetables.OrderBy(t => t.DayOfWeek);
+                    timetables = timetables.OrderBy(t => t.DayOfWeek);
                     break;
                 case SortState.TimetableDayOfWeekDesc:
-                    timtetables = timtetables.OrderByDescending(t => t.DayOfWeek);
+                    timetables = timetables.OrderByDescending(t => t.DayOfWeek);
                     break;
                 case SortState.TimetableMonthAsc:
-                    timtetables = timtetables.OrderBy(t => t.Month);
+                    timetables = timetables.OrderBy(t => t.Month);
                     break;
                 case SortState.TimetableMonthDesc:
-                    timtetables = timtetables.OrderByDescending(t => t.Month);
+                    timetables = timetables.OrderByDescending(t => t.Month);
                     break;
                 case SortState.TimetableYearAsc:
-                    timtetables = timtetables.OrderBy(t => t.Year);
+                    timetables = timetables.OrderBy(t => t.Year);
                     break;
                 case SortState.TimetableYearDesc:
-                    timtetables = timtetables.OrderByDescending(t => t.Year);
+                    timetables = timetables.OrderByDescending(t => t.Year);
                     break;
                 case SortState.ShowNameAsc:
-                    timtetables = timtetables.OrderBy(t => t.Show.Name);
+                    timetables = timetables.OrderBy(t => t.Show.Name);
                     break;
                 case SortState.ShowNameDesc:
-                    timtetables = timtetables.OrderByDescending(t => t.Show.Name);
+                    timetables = timetables.OrderByDescending(t => t.Show.Name);
                     break;
                 case SortState.TimetableStartTimeAsc:
-                    timtetables = timtetables.OrderBy(t => t.StartTime);
+                    timetables = timetables.OrderBy(t => t.StartTime);
                     break;
                 case SortState.TimetableStartTimeDesc:
-                    timtetables = timtetables.OrderByDescending(t => t.StartTime);
+                    timetables = timetables.OrderByDescending(t => t.StartTime);
                     break;
                 case SortState.TimetablEndTimeAsc:
-                    timtetables = timtetables.OrderBy(t => t.EndTime);
+                    timetables = timetables.OrderBy(t => t.EndTime);
                     break;
                 case SortState.TimetablEndTimeDesc:
-                    timtetables = timtetables.OrderByDescending(t => t.EndTime);
+                    timetables = timetables.OrderByDescending(t => t.EndTime);
                     break;
                 case SortState.StaffFullNameAsc:
-                    timtetables = timtetables.OrderBy(t => t.Staff.FullName);
+                    timetables = timetables.OrderBy(t => t.Staff.FullName);
                     break;
                 case SortState.StaffFullNameDesc:
-                    timtetables = timtetables.OrderByDescending(t => t.Staff.FullName);
+                    timetables = timetables.OrderByDescending(t => t.Staff.FullName);
                     break;
             }
 
-            if (dayOfWeek != 0)
-                timtetables = timtetables.Where(t => t.DayOfWeek == dayOfWeek).AsQueryable();
-            if (month != 0)
-                timtetables = timtetables.Where(t => t.Month == month).AsQueryable();
-            if (year != 0)
-                timtetables = timtetables.Where(t => t.Year == year).AsQueryable();
+            if (filterModel.DayOfWeek != 0)
+                timetables = timetables.Where(t => t.DayOfWeek == filterModel.DayOfWeek).AsQueryable();
+            if (filterModel.Month != 0)
+                timetables = timetables.Where(t => t.Month == filterModel.Month).AsQueryable();
+            if (filterModel.Year != 0)
+                timetables = timetables.Where(t => t.Year == filterModel.Year).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.StaffName))
+            {
+                timetables = timetables.Where(t => t.Staff.FullName == filterModel.StaffName).AsQueryable();
+            }
+            if (!string.IsNullOrEmpty(filterModel.ShowName))
+            {
+                timetables = timetables.Where(t => t.Show.Name == filterModel.ShowName).AsQueryable();
+            }
 
-            return timtetables;
+            return timetables;
         }
     }
 }

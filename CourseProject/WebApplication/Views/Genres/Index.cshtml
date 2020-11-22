@@ -9,17 +9,21 @@
     </h2>
 
     <div class="container">
-        <a asp-action="Create" asp-route-sortState="@Model.SortViewModel.CurrentState" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
-
-        <fieldset class="p-2 float-right">
+        <fieldset class="p-2 float-left">
             <form method="post" asp-route-page="@Model.PageViewModel.CurrentPage">
-                <label asp-for="GenresFilterViewModel.GenreName"></label>
-                <input name="GenreName" value="@Model.GenresFilterViewModel.GenreName" />
+                <p class="w-100">
+                    <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2 float-left">Add new entity</a>
 
-                <label asp-for="GenresFilterViewModel.GenreDescription"></label>
-                <input name="GenreDescription" value="@Model.GenresFilterViewModel.GenreDescription" />
+                    <input type="submit" value="Filter" class="btn btn-primary p-2 ml-3" />
+                    <a asp-action="ClearFilter" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger p-2">Clear</a>
+                </p>
+                <p>
+                    <label asp-for="GenresFilterViewModel.GenreName"></label>
+                    <input asp-for="GenresFilterViewModel.GenreName" />
 
-                <input type="submit" value="Filter" class="btn btn-primary" />
+                    <label asp-for="GenresFilterViewModel.GenreDescription"></label>
+                    <input asp-for="GenresFilterViewModel.GenreDescription" />
+                </p>
             </form>
         </fieldset>
     </div>

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,7 +46,7 @@ namespace WebApplication.Controllers
             {
                 model = new StaffViewModel();
 
-                IQueryable<Staff> Staff = GetSortedEntities(sortState, filter.FullName, filter.PositionName);
+                IQueryable<Staff> Staff = GetSortedEntities(sortState, filter);
 
                 int count = Staff.Count();
                 int pageSize = 10;
@@ -62,19 +64,46 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(StaffFilterViewModel filterModel, int page)
+        public IActionResult Index(StaffViewModel filterModel, int page)
         {
             StaffFilterViewModel filter = HttpContext.Session.Get<StaffFilterViewModel>(filterKey);
             if (filter != null)
             {
-                filter.FullName = filterModel.FullName;
-                filter.PositionName = filterModel.PositionName;
+                filter.FullName = filterModel.StaffFilterViewModel.FullName;
+                filter.PositionName = filterModel.StaffFilterViewModel.PositionName;
 
                 HttpContext.Session.Remove(filterKey);
                 HttpContext.Session.Set(filterKey, filter);
             }
 
             return RedirectToAction("Index", new { page });
+        }
+
+        public IActionResult ClearFilter(int page)
+        {
+            HttpContext.Session.Remove(filterKey);
+            return RedirectToAction("Index", new { page });
+        }
+
+        public IActionResult GetTotalTime(int id, int page)
+        {
+            StaffViewModel model = new StaffViewModel { PageViewModel = new PageViewModel { CurrentPage = page } };
+
+            Staff staff = db.Staff.Find(id);
+            if (staff == null)
+                return NotFound();
+
+            model.Entity = staff;
+
+            DateTime date = DateTime.Today;
+            model.TotalTime = db.Shows.
+                Join(db.Timetables, s => s.ShowId, t => t.ShowId, (s, t) => new { s, t })
+                .Where(q => q.t.StaffId == id && q.t.Year == date.Year && q.t.Month == date.Month)
+                .Select(q => q.s.Duration)
+                .AsEnumerable()
+                .Aggregate(TimeSpan.Zero, (subtotal, t) => subtotal.Add(t));
+
+            return View(model);
         }
 
         public IActionResult Create(int page)
@@ -226,7 +255,7 @@ namespace WebApplication.Controllers
                 return false;
         }
 
-        private IQueryable<Staff> GetSortedEntities(SortState sortState, string fullName, string positionName)
+        private IQueryable<Staff> GetSortedEntities(SortState sortState, StaffFilterViewModel filterModel)
         {
             IQueryable<Staff> Staff = db.Staff.Include(s => s.Position).AsQueryable();
             switch (sortState)
@@ -245,10 +274,10 @@ namespace WebApplication.Controllers
                     break;
             }
 
-            if (!string.IsNullOrEmpty(fullName))
-                Staff = Staff.Where(s => s.FullName.Contains(fullName)).AsQueryable();
-            if (!string.IsNullOrEmpty(positionName))
-                Staff = Staff.Where(s => s.Position.Name.Contains(positionName)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.FullName))
+                Staff = Staff.Where(s => s.FullName.Contains(filterModel.FullName)).AsQueryable();
+            if (!string.IsNullOrEmpty(filterModel.PositionName))
+                Staff = Staff.Where(s => s.Position.Name.Contains(filterModel.PositionName)).AsQueryable();
 
             return Staff;
         }

@@ -9,23 +9,35 @@
     </h2>
 
     <div class="container">
-        @if (User.IsInRole("admin"))
-        {
-            <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
-        }
-
-        <fieldset class="p-2 float-right">
+        <fieldset class="p-2 float-left">
             <form method="post" asp-route-page="@Model.PageViewModel.CurrentPage">
-                <label asp-for="TimetablesFilterViewModel.DayOfWeek"></label>
-                <input name="dayOfWeek" value="@Model.TimetablesFilterViewModel.DayOfWeek" />
+                <p class="w-100">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2 float-left">Add new entity</a>
+                    }
+                    <input type="submit" value="Filter" class="btn btn-primary p-2 ml-3" />
+                    <a asp-action="ClearFilter" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger p-2">Clear</a>
+                </p>
 
-                <label asp-for="TimetablesFilterViewModel.Month"></label>
-                <input name="month" value="@Model.TimetablesFilterViewModel.Month" />
+                <p>
+                    <label asp-for="TimetablesFilterViewModel.StaffName"></label>
+                    <input asp-for="TimetablesFilterViewModel.StaffName" />
 
-                <label asp-for="TimetablesFilterViewModel.Year"></label>
-                <input name="year" value="@Model.TimetablesFilterViewModel.Year" />
+                    <label asp-for="TimetablesFilterViewModel.ShowName"></label>
+                    <input asp-for="TimetablesFilterViewModel.ShowName" />
+                </p>
 
-                <input type="submit" value="Filter" class="btn btn-primary" />
+                <p>
+                    <label asp-for="TimetablesFilterViewModel.DayOfWeek"></label>
+                    <input asp-for="TimetablesFilterViewModel.DayOfWeek" />
+
+                    <label asp-for="TimetablesFilterViewModel.Month"></label>
+                    <input asp-for="TimetablesFilterViewModel.Month" />
+
+                    <label asp-for="TimetablesFilterViewModel.Year"></label>
+                    <input asp-for="TimetablesFilterViewModel.Year" />
+                </p>
             </form>
         </fieldset>
     </div>

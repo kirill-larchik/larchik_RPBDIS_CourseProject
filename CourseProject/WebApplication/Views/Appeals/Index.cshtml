@@ -9,23 +9,29 @@
     </h2>
 
     <div class="container">
-        <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2">Add new entity</a>
-
-        <fieldset class="p-2 float-right">
+        <fieldset class="p-2 float-left">
             <form method="post" asp-route-page="@Model.PageViewModel.CurrentPage">
-                <label asp-for="AppealsFilterViewModel.FullName"></label>
-                <input name="FullName" value="@Model.AppealsFilterViewModel.FullName" />
+                <p class="w-100">
+                    <a asp-action="Create" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-primary p-2 float-left">Add new entity</a>
 
-                <label asp-for="AppealsFilterViewModel.Organization"></label>
-                <input name="Organization" value="@Model.AppealsFilterViewModel.Organization" />
+                    <input type="submit" value="Filter" class="btn btn-primary p-2 ml-3" />
+                    <a asp-action="ClearFilter" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger p-2">Clear</a>
+                </p>
 
-                <label asp-for="AppealsFilterViewModel.ShowName"></label>
-                <input style="width: 10%;" name="ShowName" value="@Model.AppealsFilterViewModel.ShowName" />
+                <p>
+                    <label asp-for="AppealsFilterViewModel.FullName"></label>
+                    <input asp-for="AppealsFilterViewModel.FullName" />
 
-                <label asp-for="AppealsFilterViewModel.GoalRequest"></label>
-                <input name="GoalRequest" value="@Model.AppealsFilterViewModel.GoalRequest" />
+                    <label asp-for="AppealsFilterViewModel.Organization"></label>
+                    <input asp-for="AppealsFilterViewModel.Organization" />
 
-                <input type="submit" value="Filter" class="btn btn-primary" />
+                    <label asp-for="AppealsFilterViewModel.ShowName"></label>
+                    <input asp-for="AppealsFilterViewModel.ShowName" />
+                </p>
+                <p>
+                    <label asp-for="AppealsFilterViewModel.GoalRequest"></label>
+                    <input asp-for="AppealsFilterViewModel.GoalRequest" />
+                </p>
             </form>
         </fieldset>
     </div>
