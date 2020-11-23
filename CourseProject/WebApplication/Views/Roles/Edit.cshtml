@@ -1,5 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model WebApplication.ViewModels.RoleViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
 
 <form asp-action="Edit" method="post" class="container text-center w-25">
     <input type="hidden" name="userId" value="@Model.User.Id" />
