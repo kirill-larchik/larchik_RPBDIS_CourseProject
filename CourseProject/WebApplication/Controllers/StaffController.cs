@@ -64,9 +64,18 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(StaffViewModel filterModel, int page)
+        public IActionResult Index(StaffViewModel filterModel, string positionName)
         {
-            StaffFilterViewModel filter = HttpContext.Session.Get<StaffFilterViewModel>(filterKey);
+            StaffFilterViewModel filter;
+            if (!string.IsNullOrEmpty(positionName))
+            {
+                filter = new StaffFilterViewModel { PositionName = positionName };
+                HttpContext.Session.Set(filterKey, filter);
+
+                return RedirectToAction("Index", new { page = 1 });
+            }
+
+            filter = HttpContext.Session.Get<StaffFilterViewModel>(filterKey);
             if (filter != null)
             {
                 filter.FullName = filterModel.StaffFilterViewModel.FullName;
@@ -76,13 +85,13 @@ namespace WebApplication.Controllers
                 HttpContext.Session.Set(filterKey, filter);
             }
 
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page = 1 });
         }
 
-        public IActionResult ClearFilter(int page)
+        public IActionResult ClearFilter()
         {
             HttpContext.Session.Remove(filterKey);
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page = 1 });
         }
 
         public IActionResult GetTotalTime(int id, int page)
