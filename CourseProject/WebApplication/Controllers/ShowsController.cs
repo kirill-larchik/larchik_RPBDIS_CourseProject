@@ -69,7 +69,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(ShowsViewModel filterModel, int page, string staffName = null)
+        public IActionResult Index(ShowsViewModel filterModel, string staffName = null, string genreName = null)
         {
             ShowsFilterViewModel filter;
             if (!string.IsNullOrEmpty(staffName))
@@ -77,7 +77,15 @@ namespace WebApplication.Controllers
                 filter = new ShowsFilterViewModel { StaffName = staffName };
                 HttpContext.Session.Set(filterKey, filter);
 
-                return RedirectToAction("Index", new { page });
+                return RedirectToAction("Index", new { page = 1 });
+            }
+
+            if (!string.IsNullOrEmpty(genreName))
+            {
+                filter = new ShowsFilterViewModel { GenreName = genreName };
+                HttpContext.Session.Set(filterKey, filter);
+
+                return RedirectToAction("Index", new { page = 1 });
             }
 
             filter = HttpContext.Session.Get<ShowsFilterViewModel>(filterKey);
@@ -95,13 +103,13 @@ namespace WebApplication.Controllers
                 HttpContext.Session.Set(filterKey, filter);
             }
 
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page = 1});
         }
 
-        public IActionResult ClearFilter(int page)
+        public IActionResult ClearFilter()
         {
             HttpContext.Session.Remove(filterKey);
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page = 1 });
         }
 
         [Authorize(Roles = "admin")]
@@ -351,11 +359,13 @@ namespace WebApplication.Controllers
             // Improve?
             if (filterModel.StartDate != default || filterModel.EndDate != default)
             {
+                DateTime endDate = new DateTime(filterModel.EndDate.Year, filterModel.EndDate.Month, DateTime.DaysInMonth(filterModel.EndDate.Year, filterModel.EndDate.Month));
+
                 shows = shows
                 .Join(db.Timetables, s => s.ShowId, t => t.ShowId, (s, t) => new { s, t })
                 .AsEnumerable()
-                .Select((q, d) => new { q, d = new DateTime(q.t.Year, q.t.Month, filterModel.StartDate.Day) })
-                .Where(q => q.d >= filterModel.StartDate && q.d <= filterModel.EndDate.AddDays(q.d.Day + 1))
+                .Select((q, d) => new { q, d = new DateTime(q.t.Year, q.t.Month, DateTime.DaysInMonth(q.t.Year, q.t.Month)) })
+                .Where(q => q.d.Date >= filterModel.StartDate.Date && q.d.Date <= endDate)
                 .Select(q => q.q.s)
                 .AsQueryable();
             }

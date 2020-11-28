@@ -49,25 +49,25 @@
 
     </div>
 
-    <table class="table table-hover table-sm">
+    <table class="table table-hover table-sm text-break">
         <thead class="thead-dark text-center text-white">
             <tr>
-                <th class="w-25">
+                <th style="width: 20%;">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.ShowNameSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.Name)
                     </a>
                 </th>
-                <th class="w-25">
+                <th style="width: 20%;">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.ShowDescriptionSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.Description)
                     </a>
                 </th>
-                <th class="w-25">
+                <th style="width: 15%;">
                     <a asp-action="Index" asp-route-sortState="@Model.SortViewModel.GenreNameSort" asp-route-page="@Model.PageViewModel.CurrentPage" class="nav-link text-white">
                         @Html.DisplayNameFor(e => e.Entity.Genre.GenreName)
                     </a>
                 </th>
-                 <th class="w-25 align-middle">Modification</th>
+                 <th style="width: 45%;" class="align-middle">Modification</th>
             </tr>
         </thead>
 
@@ -79,12 +79,15 @@
                 <td>@entity.Description</td>
                 <td>@entity.Genre.GenreName</td>
                 <td class="text-center">
-                    <a asp-action="Details" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-success">Details</a>
-                    @if (User.IsInRole("admin"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger">Delete</a>
-                    }
+                    <form asp-controller="Timetables" asp-action="Index" method="post" asp-route-showName="@entity.Name">
+                        <input type="submit" value="List timetables" class="btn btn-success" />
+                        <a asp-action="Details" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-success">Details</a>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@entity.ShowId" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger">Delete</a>
+                        }
+                    </form>
                 </td>
             </tr>
             }

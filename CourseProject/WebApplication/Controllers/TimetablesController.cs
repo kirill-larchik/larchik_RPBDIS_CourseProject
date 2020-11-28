@@ -64,9 +64,18 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(TimetablesViewModel filterModel, int page = 1)
+        public IActionResult Index(TimetablesViewModel filterModel, string showName)
         {
-            TimetablesFilterViewModel filter = HttpContext.Session.Get<TimetablesFilterViewModel>(filterKey);
+            TimetablesFilterViewModel filter;
+            if (!string.IsNullOrEmpty(showName))
+            {
+                filter = new TimetablesFilterViewModel { ShowName = showName };
+                HttpContext.Session.Set(filterKey, filter);
+
+                return RedirectToAction("Index", new { page = 1 });
+            }
+
+            filter = HttpContext.Session.Get<TimetablesFilterViewModel>(filterKey);
             if (filter != null)
             {
                 filter.DayOfWeek = filterModel.TimetablesFilterViewModel.DayOfWeek;
@@ -79,13 +88,13 @@ namespace WebApplication.Controllers
                 HttpContext.Session.Set(filterKey, filter);
             }
 
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page = 1 });
         }
 
-        public IActionResult ClearFilter(int page)
+        public IActionResult ClearFilter()
         {
             HttpContext.Session.Remove(filterKey);
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page = 1 });
         }
 
 

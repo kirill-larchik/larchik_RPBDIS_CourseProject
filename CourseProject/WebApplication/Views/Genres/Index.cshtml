@@ -28,7 +28,7 @@
         </fieldset>
     </div>
 
-    <table class="table table-hover table-sm">
+    <table class="table table-hover table-sm text-break">
         <thead class="thead-dark text-center text-white">
             <tr>
                 <th class="w-25">
@@ -52,6 +52,9 @@
                     <td>@entity.GenreName</td>
                     <td>@entity.GenreDescription</td>
                     <td class="text-center">
+                        <form asp-controller="Shows" asp-action="Index" method="post" asp-route-genreName="@entity.GenreName">
+                            <input type="submit" value="List shows" class="btn btn-success float-left ml-3" />
+                        </form>
                         <a asp-action="Edit" asp-route-id="@entity.GenreId" asp-route-sortState="@Model.SortViewModel.CurrentState" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-warning">Edit</a>
                         <a asp-action="Delete" asp-route-id="@entity.GenreId" asp-route-sortState="@Model.SortViewModel.CurrentState" asp-route-page="@Model.PageViewModel.CurrentPage" class="btn btn-danger">Delete</a>
                     </td>

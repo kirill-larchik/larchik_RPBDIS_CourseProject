@@ -62,7 +62,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(AppealsViewModel filterModel, int page)
+        public IActionResult Index(AppealsViewModel filterModel)
         {
             AppealsFilterViewModel filter = HttpContext.Session.Get<AppealsFilterViewModel>(filterKey);
             if (filter != null)
@@ -76,13 +76,13 @@ namespace WebApplication.Controllers
                 HttpContext.Session.Set(filterKey, filter);
             }
 
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page = 1 });
         }
 
-        public IActionResult ClearFilter(int page)
+        public IActionResult ClearFilter()
         {
             HttpContext.Session.Remove(filterKey);
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page = 1 });
         }
 
         public IActionResult Create(int page)
