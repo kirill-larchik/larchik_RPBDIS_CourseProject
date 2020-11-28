@@ -359,11 +359,13 @@ namespace WebApplication.Controllers
             // Improve?
             if (filterModel.StartDate != default || filterModel.EndDate != default)
             {
+                DateTime endDate = new DateTime(filterModel.EndDate.Year, filterModel.EndDate.Month, DateTime.DaysInMonth(filterModel.EndDate.Year, filterModel.EndDate.Month));
+
                 shows = shows
                 .Join(db.Timetables, s => s.ShowId, t => t.ShowId, (s, t) => new { s, t })
                 .AsEnumerable()
-                .Select((q, d) => new { q, d = new DateTime(q.t.Year, q.t.Month, filterModel.StartDate.Day) })
-                .Where(q => q.d >= filterModel.StartDate && q.d <= filterModel.EndDate.AddDays(q.d.Day + 1))
+                .Select((q, d) => new { q, d = new DateTime(q.t.Year, q.t.Month, DateTime.DaysInMonth(q.t.Year, q.t.Month)) })
+                .Where(q => q.d.Date >= filterModel.StartDate.Date && q.d.Date <= endDate)
                 .Select(q => q.q.s)
                 .AsQueryable();
             }

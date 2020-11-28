@@ -49,6 +49,51 @@ namespace WebApplication.Data
                 db.SaveChanges();
             }
 
+
+            if (!db.Positions.Any())
+            {
+                string name;
+
+                rowCount = 500;
+                rowIndex = 0;
+                while (rowIndex < rowCount)
+                {
+                    minStringLength = 4;
+                    maxStringLength = 16;
+                    name = GetString(minStringLength, maxStringLength);
+
+                    db.Positions.Add(new Position { Name = name });
+
+                    rowIndex++;
+                }
+
+                db.SaveChanges();
+            }
+
+            if (!db.Staff.Any())
+            {
+                string fullName;
+                int positionId;
+
+                rowCount = 20000;
+                rowIndex = 0;
+                while (rowIndex < rowCount)
+                {
+                    fullName = GetString(8, 64);
+                    positionId = random.Next(1, 501);
+
+                    db.Staff.Add(new Staff
+                    {
+                        FullName = fullName,
+                        PositionId = positionId
+                    });
+
+                    rowIndex++;
+                }
+
+                db.SaveChanges();
+            }
+
             if (!db.Shows.Any())
             {
                 string showName;
@@ -167,50 +212,6 @@ namespace WebApplication.Data
                         Organization = organization,
                         ShowId = showId,
                         GoalRequest = goalRequest
-                    });
-
-                    rowIndex++;
-                }
-
-                db.SaveChanges();
-            }
-
-            if (!db.Positions.Any())
-            {
-                string name;
-
-                rowCount = 500;
-                rowIndex = 0;
-                while (rowIndex < rowCount)
-                {
-                    minStringLength = 4;
-                    maxStringLength = 16;
-                    name = GetString(minStringLength, maxStringLength);
-
-                    db.Positions.Add(new Position { Name = name });
-
-                    rowIndex++;
-                }
-
-                db.SaveChanges();
-            }
-
-            if (!db.Staff.Any())
-            {
-                string fullName;
-                int positionId;
-
-                rowCount = 20000;
-                rowIndex = 0;
-                while (rowIndex < rowCount)
-                {
-                    fullName = GetString(8, 64);
-                    positionId = random.Next(1, 501);
-
-                    db.Staff.Add(new Staff
-                    {
-                        FullName = fullName,
-                        PositionId = positionId
                     });
 
                     rowIndex++;
