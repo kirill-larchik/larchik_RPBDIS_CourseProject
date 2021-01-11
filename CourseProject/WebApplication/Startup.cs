@@ -64,7 +64,6 @@ namespace WebApplication
             app.UseAuthorization();
 
             app.UseRoleInitializer();
-            app.UseDbInitializer();
 
             app.UseEndpoints(endpoints =>
             {

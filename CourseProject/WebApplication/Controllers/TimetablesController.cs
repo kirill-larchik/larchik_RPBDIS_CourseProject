@@ -336,11 +336,11 @@ namespace WebApplication.Controllers
                 timetables = timetables.Where(t => t.Year == filterModel.Year).AsQueryable();
             if (!string.IsNullOrEmpty(filterModel.StaffName))
             {
-                timetables = timetables.Where(t => t.Staff.FullName == filterModel.StaffName).AsQueryable();
+                timetables = timetables.Where(t => t.Staff.FullName.Contains(filterModel.StaffName)).AsQueryable();
             }
             if (!string.IsNullOrEmpty(filterModel.ShowName))
             {
-                timetables = timetables.Where(t => t.Show.Name == filterModel.ShowName).AsQueryable();
+                timetables = timetables.Where(t => t.Show.Name.Contains(filterModel.ShowName)).AsQueryable();
             }
 
             return timetables;

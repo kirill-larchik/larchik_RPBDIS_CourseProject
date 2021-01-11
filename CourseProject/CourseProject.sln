@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{046A729B-B2B4-4450-84C3-5AE938C3A4A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication", "WebApplication\WebApplication.csproj", "{046A729B-B2B4-4450-84C3-5AE938C3A4A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diagramm", "Diagramm\Diagramm.csproj", "{55F25CFF-E439-4C1F-BC20-0B3A03A1A267}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{046A729B-B2B4-4450-84C3-5AE938C3A4A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{046A729B-B2B4-4450-84C3-5AE938C3A4A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{046A729B-B2B4-4450-84C3-5AE938C3A4A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55F25CFF-E439-4C1F-BC20-0B3A03A1A267}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55F25CFF-E439-4C1F-BC20-0B3A03A1A267}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55F25CFF-E439-4C1F-BC20-0B3A03A1A267}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55F25CFF-E439-4C1F-BC20-0B3A03A1A267}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
